@@ -1,22 +1,46 @@
-##
-## Makefile for MiniLibX in /home/boulon/work/c/raytraceur/minilibx
-## 
-## Made by Olivier Crouzet
-## Login   <ol@epitech.net>
-## 
-## Started on  Tue Oct  5 15:56:43 2004 Olivier Crouzet
-## Last update Tue May 15 15:44:41 2007 Olivier Crouzet
-##
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/12/06 20:01:07 by natferna          #+#    #+#              #
+#    Updated: 2024/12/06 23:53:56 by natferna         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-## Please use configure script
+NAME = so_long
 
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -Iincludes -Iminilibx  # Incluye la carpeta minilibx
+LDFLAGS = -L/System/Volumes/Data/opt/X11/lib -Lminilibx  # Ruta a libXext y libmlx.a
+CPPFLAGS = -I/System/Volumes/Data/opt/X11/include  # Ruta a los encabezados de X11
 
-all	: do_configure
+# Especifica la ruta a la carpeta minilibx donde está libmlx.a
+MLX = -lmlx -lX11 -lXext -lm
 
-do_configure	:
-	./configure
+SRCS = $(wildcard src/*.c)
 
-clean	:
-	./configure clean
+INCLUD = ./includes/so_long.h \
+            ./includes/mlx.h
 
-re	: clean all
+OBJS = $(SRCS:.c=.o)
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LDFLAGS) $(MLX)  # Se enlaza con libmlx.a
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(OBJS)
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re
