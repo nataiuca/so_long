@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 00:14:17 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/09 14:56:29 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/09 16:19:04 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,29 +114,38 @@ int	process_map(char *map_file, t_game *game)
 	return (1);
 }
 
-void	initialize_player_and_collectibles(t_game *game)
+void initialize_player_and_collectibles(t_game *game)
 {
-	int	y;
-	int	x;
+    int y;
+    int x;
 
-	game->collectibles = 0;
-	y = 0;
-	while (game->map[y])
-	{
-		x = 0;
-		while (game->map[y][x])
-		{
-			if (game->map[y][x] == 'P')
-			{
-				game->player_x = x;
-				game->player_y = y;
-				ft_printf("Jugador inicializado en: x = %d, y = %d\n", x, y);
-			}
-			else if (game->map[y][x] == 'C')
-				game->collectibles++;
-			x++;
-		}
-		y++;
-	}
-	ft_printf("Coleccionables totales: %d\n", game->collectibles);
+    game->collectibles = 0;
+    y = 0;
+    while (game->map[y])
+    {
+        x = 0;
+        while (game->map[y][x])
+        {
+            if (game->map[y][x] == 'P')
+            {
+                game->player_x = x;
+                game->player_y = y;
+                ft_printf("Jugador inicializado en: x = %d, y = %d\n", x, y);
+            }
+            else if (game->map[y][x] == 'C')
+                game->collectibles++;
+            else if (game->map[y][x] == 'E')
+            {
+                // Verifica si la salida está en la misma posición que el jugador
+                if (game->player_x == x && game->player_y == y)
+                {
+                    ft_printf("Error: La salida está en la misma posición que el jugador.\n");
+                    exit(1); // Sale inmediatamente si es el caso
+                }
+            }
+            x++;
+        }
+        y++;
+    }
+    ft_printf("Coleccionables totales: %d\n", game->collectibles);
 }

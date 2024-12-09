@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 20:07:29 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/09 15:05:00 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/09 20:58:59 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,16 @@ void move_player(t_game *game, int dx, int dy)
     }
 
     // Si es la salida y ya no hay coleccionables, gana el juego
-    if (game->map[new_y][new_x] == 'E' && game->collectibles == 0)
+    if (game->map[new_y][new_x] == 'E')
     {
-		game->move_count++;
-        ft_printf("¡Felicidades! Has ganado el juego en %d movimientos.\n", game->move_count);
-        exit_game(game); // Limpia recursos y cierra el juego
+		if (game->collectibles == 0)
+		{
+			game->move_count++;
+        	ft_printf("¡Felicidades! Has ganado el juego en %d movimientos.\n", game->move_count);
+        	exit_game(game); // Limpia recursos y cierra el juego
+		}
         return;
+
     }
 
     // Mueve al jugador
@@ -75,6 +79,7 @@ int handle_key(int keycode, t_game *game)
 void	handle_events(t_game *game)
 {
 	mlx_key_hook(game->win, handle_key, game); // Maneja eventos de teclado
+	mlx_hook(game->win, 17, 0, (int (*)(void *))exit_game, game);
 	mlx_loop(game->mlx); // Inicia el loop principal
 }
 
