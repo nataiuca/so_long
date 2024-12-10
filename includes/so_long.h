@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 20:02:11 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/10 21:40:34 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/10 23:38:22 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,8 @@ void				find_exit_position(char **map, t_game *game, int *exit_x,
 						int *exit_y);
 int					**allocate_visited(int width, int height);
 int					is_exit_found(t_game *game, int x, int y);
-void	check_neighbors(t_game *game, t_queue *queue, int **visited,
-		t_node *pos);
+void				check_neighbors(t_game *game, t_queue *queue, int **visited,
+						t_node *pos);
 int					bfs(t_game *game);
 int					is_exit_reachable_after_collectibles(t_game *game);
 void				check_exit_accessibility(t_game *game);
@@ -128,7 +128,6 @@ void				render_map(t_game *game);
 int					validate_map(char **map);
 void				update_element_count(char tile, int *player, int *exit,
 						int *collectible);
-void				print_element_position(char tile, int i, int j);
 int					validate_elements_count(int player, int exit,
 						int collectible);
 int					check_map_elements(char **map);
@@ -146,8 +145,8 @@ int					check_elements(char element, int *player_found,
 						int *exit_found, int *collectible_found);
 void				init_visited_player(t_game *game, int ***visited);
 void				free_visited_player(t_game *game, int **visited);
-void	init_directions(int dir_x[4], int dir_y[4]);
-void	check_direction(t_game *game, t_queue *queue, \
-	int **visited, t_node *pos);
+void				init_directions(int dir_x[4], int dir_y[4]);
+void				check_direction(t_game *game, t_queue *queue, int **visited,
+						t_node *pos);
 
 #endif

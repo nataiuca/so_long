@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 21:37:49 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/10 23:34:10 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/10 23:38:02 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,6 @@ void	update_element_count(char tile, int *player, int *exit,
 	{
 		(*collectible)++;
 	}
-}
-
-void	print_element_position(char tile, int i, int j)
-{
-	ft_printf("call print_element_position\n");
-	if (tile == 'P')
-		ft_printf("Player found at (%d, %d)\n", i, j);
-	else if (tile == 'E')
-		ft_printf("Exit found at (%d, %d)\n", i, j);
-	else if (tile == 'C')
-		ft_printf("Collectible found at (%d, %d)\n", i, j);
 }
 
 int	validate_elements_count(int player, int exit, int collectible)
