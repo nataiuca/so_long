@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/08 21:37:49 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/09 15:00:43 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/10 23:34:10 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,35 +15,57 @@
 
 int	validate_map(char **map)
 {
-	int	i;
-	int	width;	
+	int	width;
 
-	i = 0;
 	width = -1;
 	if (!map || !map[0])
 	{
 		ft_printf("Error: Map is empty or NULL.\n");
 		return (0);
 	}
-	while (map[i])
-	{
-		if (width == -1)
-			width = ft_strlen(map[i]);
-		else if ((int)ft_strlen(map[i]) != width)
-		{
-			ft_printf("Error: Row %d is not the same length as the first row.\n", i);
-			return (0);
-		}
-		if (!check_row(map[i], i, width))
-		{
-			ft_printf("Error: Invalid row at index %d.\n", i);
-			return (0);
-		}
-		i++;
-	}
+	if (!check_map_dimensions(map, &width))
+		return (0);
 	if (!check_map_elements(map))
 	{
 		ft_printf("Error: Missing required elements (P, E, C).\n");
+		return (0);
+	}
+	return (1);
+}
+
+void	update_element_count(char tile, int *player, int *exit,
+		int *collectible)
+{
+	if (tile == 'P')
+	{
+		(*player)++;
+	}
+	else if (tile == 'E')
+	{
+		(*exit)++;
+	}
+	else if (tile == 'C')
+	{
+		(*collectible)++;
+	}
+}
+
+void	print_element_position(char tile, int i, int j)
+{
+	ft_printf("call print_element_position\n");
+	if (tile == 'P')
+		ft_printf("Player found at (%d, %d)\n", i, j);
+	else if (tile == 'E')
+		ft_printf("Exit found at (%d, %d)\n", i, j);
+	else if (tile == 'C')
+		ft_printf("Collectible found at (%d, %d)\n", i, j);
+}
+
+int	validate_elements_count(int player, int exit, int collectible)
+{
+	if (player != 1 || exit != 1 || collectible < 1)
+	{
+		ft_printf("Error: Missing P, E or C on the map.\n");
 		return (0);
 	}
 	return (1);
@@ -66,76 +88,14 @@ int	check_map_elements(char **map)
 		j = 0;
 		while (map[i][j])
 		{
-			if (map[i][j] == 'P')
-			{
-				player_found++;
-				ft_printf("Player found at (%d, %d)\n", i, j);
-			}
-			else if (map[i][j] == 'E')
-			{
-				exit_found++;
-				ft_printf("Exit found at (%d, %d)\n", i, j);
-			}
-			else if (map[i][j] == 'C')
-			{
-				collectible_found++;
-				ft_printf("Collectible found at (%d, %d)\n", i, j);
-			}
+			check_elements(map[i][j], &player_found, &exit_found,
+				&collectible_found);
 			j++;
 		}
 		i++;
+		if (player_found == 1 && exit_found == 1 && collectible_found >= 1)
+			break ;
 	}
-	if (player_found != 1 || exit_found != 1 || collectible_found <1)
-	{
-		ft_printf("Error: Missing P, E or C on the map.\n");
-		return (0);
-	}
-	return (1);
-}
-
-int	check_row(char *row, int i, int width)
-{
-	if (i == 0 || row[i + 1] == '\0')
-		return (check_row_borders(row));
-	if (row[0] != '1' || row[width - 1] != '1')
-	{
-		ft_printf("Error: Invalid border in row %d\n", i);
-		return (0);
-	}
-	return (check_valid_elements(row));
-}
-
-int	check_row_borders(char *row)
-{
-	int	j;
-
-	j = 0;
-	while (row[j] != '\0')
-	{
-		if (row[j] != '1')
-		{
-			ft_printf("Error: Invalid character at the border (not '1').\n");
-			return (0);
-		}
-		j++;
-	}
-	return (1);
-}
-
-int	check_valid_elements(char *row)
-{
-	int	j;
-
-	j = 0;
-	while (row[j] != '\0')
-	{
-		if (row[j] != '1' && row[j] != '0' && row[j] != 'P' && row[j] != 'E'
-			&& row[j] != 'C')
-		{
-			ft_printf("Error: Invalid character '%c' found.\n", row[j]);
-			return (0);
-		}
-		j++;
-	}
-	return (1);
+	return (validate_elements_count(player_found, exit_found,
+			collectible_found));
 }

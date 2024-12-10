@@ -6,101 +6,88 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 20:07:29 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/09 20:58:59 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/10 23:35:47 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/so_long.h"
 
-void move_player(t_game *game, int dx, int dy)
+int	handle_exit(t_game *game, int x, int y)
 {
-    int new_x = game->player_x + dx;
-    int new_y = game->player_y + dy;
-
-    // Verifica si la nueva posición está dentro de los límites del mapa
-    if (new_x < 0 || new_x >= game->width || new_y < 0 || new_y >= game->height)
-        return; // Evita mover fuera del mapa
-
-    // Verifica si la nueva posición es una pared
-    if (game->map[new_y][new_x] == '1')
-        return; // No permite mover sobre paredes
-
-    // Si es un coleccionable, recógelo
-    if (game->map[new_y][new_x] == 'C')
-    {
-        game->collectibles--;
-        game->map[new_y][new_x] = '0'; // Borra el coleccionable del mapa
-    }
-
-    // Si es la salida y ya no hay coleccionables, gana el juego
-    if (game->map[new_y][new_x] == 'E')
-    {
-		if (game->collectibles == 0)
-		{
-			game->move_count++;
-        	ft_printf("¡Felicidades! Has ganado el juego en %d movimientos.\n", game->move_count);
-        	exit_game(game); // Limpia recursos y cierra el juego
-		}
-        return;
-
-    }
-
-    // Mueve al jugador
-    game->map[game->player_y][game->player_x] = '0'; // Limpia la posición anterior
-    game->map[new_y][new_x] = 'P'; // Nueva posición del jugador
-    game->player_x = new_x;
-    game->player_y = new_y;
-
-    // Incrementa el contador de movimientos y muestra el mensaje
-    game->move_count++;
-    ft_printf("Movimientos: %d\n", game->move_count);
-
-    // Redibuja el mapa
-    render_map(game);
-}
-
-int handle_key(int keycode, t_game *game)
-{
-    if (keycode == 65307)  // Esc para cerrar el juego
-        exit(0);
-
-    if (keycode == 'w')  // Tecla arriba (arriba en el mapa es -1 en y)
-        move_player(game, 0, -1);
-    if (keycode == 's')  // Tecla abajo (abajo en el mapa es +1 en y)
-        move_player(game, 0, 1);
-    if (keycode == 'a')  // Tecla izquierda (izquierda en el mapa es -1 en x)
-        move_player(game, -1, 0);
-    if (keycode == 'd')  // Tecla derecha (derecha en el mapa es +1 en x)
-        move_player(game, 1, 0);
-
-    return (0);
-}
-
-void	handle_events(t_game *game)
-{
-	mlx_key_hook(game->win, handle_key, game); // Maneja eventos de teclado
-	mlx_hook(game->win, 17, 0, (int (*)(void *))exit_game, game);
-	mlx_loop(game->mlx); // Inicia el loop principal
-}
-
-void exit_game(t_game *game)
-{
-    mlx_destroy_window(game->mlx, game->win);
-    free_map(game->map); // Libera el mapa si tienes una función de este tipo
-    exit(0);
-}
-
-void	free_map(char **map)
-{
-	int	i;
-
-	i = 0;
-	if (!map)
-		return ;
-	while (map[i])
+	if (game->map[y][x] == 'E' && game->collected == game->collectibles)
 	{
-		free(map[i]); // Libera cada fila del mapa
-		i++;
+		game->move_count++;
+		ft_printf("Congrats! You won the game in %d moves.\n",
+			game->move_count);
+		exit_game(game);
+		return (1);
 	}
-	free(map); // Libera el array de punteros
+	return (0);
+}
+
+void	move_player(t_game *game, int dx, int dy)
+{
+	int	new_x;
+	int	new_y;
+	int	**visited;
+
+	init_visited_player(game, &visited);
+	new_x = game->player_x + dx;
+	new_y = game->player_y + dy;
+	if (!is_valid_move(game, new_x, new_y, visited))
+		return ;
+	handle_collectible(game, new_x, new_y);
+	if (handle_exit(game, new_x, new_y))
+		return ;
+	if (!is_exit_found(game, new_x, new_y))
+	{
+		game->map[game->player_y][game->player_x] = '0';
+		game->map[new_y][new_x] = 'P';
+		game->player_x = new_x;
+		game->player_y = new_y;
+		game->move_count++;
+		ft_printf("Moves: %d\n", game->move_count);
+		render_map(game);
+	}
+	return ;
+}
+
+int	handle_key(int keycode, t_game *game)
+{
+	if (keycode == 65307)
+		exit(0);
+	if (keycode == 'w')
+		move_player(game, 0, -1);
+	if (keycode == 's')
+		move_player(game, 0, 1);
+	if (keycode == 'a')
+		move_player(game, -1, 0);
+	if (keycode == 'd')
+		move_player(game, 1, 0);
+	return (0);
+}
+
+void	process_tile(t_game *game, int x, int y)
+{
+	if (game->map[y][x] == 'P')
+	{
+		game->player_x = x;
+		game->player_y = y;
+	}
+	else if (game->map[y][x] == 'C')
+		game->collectibles++;
+	else if (game->map[y][x] == 'E')
+	{
+		check_exit_collision(game, x, y);
+	}
+}
+
+void	check_exit_collision(t_game *game, int x, int y)
+{
+	if (game->player_x == x && game->player_y == y)
+	{
+		ft_printf("Error: Exit is in the same position \
+			as the player.\n");
+		exit(1);
+	}
 }

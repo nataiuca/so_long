@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 00:14:17 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/09 16:19:04 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/10 23:29:14 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	process_map(char *map_file, t_game *game)
 	map_content = read_file(map_file);
 	if (!map_content)
 	{
-		ft_printf("Error: No se pudo leer el archivo del mapa.\n");
+		ft_printf("Error: Map file could not be loaded.\n");
 		return (0);
 	}
 	map_lines = ft_split(map_content, '\n');
@@ -112,40 +112,4 @@ int	process_map(char *map_file, t_game *game)
 	initialize_player_and_collectibles(game);
 	game->move_count = 0;
 	return (1);
-}
-
-void initialize_player_and_collectibles(t_game *game)
-{
-    int y;
-    int x;
-
-    game->collectibles = 0;
-    y = 0;
-    while (game->map[y])
-    {
-        x = 0;
-        while (game->map[y][x])
-        {
-            if (game->map[y][x] == 'P')
-            {
-                game->player_x = x;
-                game->player_y = y;
-                ft_printf("Jugador inicializado en: x = %d, y = %d\n", x, y);
-            }
-            else if (game->map[y][x] == 'C')
-                game->collectibles++;
-            else if (game->map[y][x] == 'E')
-            {
-                // Verifica si la salida está en la misma posición que el jugador
-                if (game->player_x == x && game->player_y == y)
-                {
-                    ft_printf("Error: La salida está en la misma posición que el jugador.\n");
-                    exit(1); // Sale inmediatamente si es el caso
-                }
-            }
-            x++;
-        }
-        y++;
-    }
-    ft_printf("Coleccionables totales: %d\n", game->collectibles);
 }
