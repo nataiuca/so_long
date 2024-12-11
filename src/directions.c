@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 20:57:41 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/11 14:33:36 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:03:34 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void	init_directions(int dir_x[4], int dir_y[4])
 	dir_y[3] = 1;
 }
 
-void	check_direction(t_game *game, t_queue *queue, \
-	int **visited, t_node *pos)
+void	check_direction(t_game *game, t_queue *queue, int **visited,
+		t_node *pos)
 {
 	int	nx;
 	int	ny;
