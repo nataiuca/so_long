@@ -59,3 +59,13 @@ void	mark_exit_as_wall(char **map, t_game *game)
 	find_exit_position(map, game, &exit_x, &exit_y);
 	map[exit_y][exit_x] = '1';
 }
+
+int	exit_game_wrapper(void *param)
+{
+	t_game	*game;
+
+	game = (t_game *)param;
+	exit_game(game);
+	return (0);
+}
+
