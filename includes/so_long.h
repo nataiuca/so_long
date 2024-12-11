@@ -148,5 +148,6 @@ void				free_visited_player(t_game *game, int **visited);
 void				init_directions(int dir_x[4], int dir_y[4]);
 void				check_direction(t_game *game, t_queue *queue, int **visited,
 						t_node *pos);
+int				exit_game_wrapper(void *param);
 
 #endif
