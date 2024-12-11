@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 00:14:17 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/10 23:29:14 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/11 14:23:08 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,4 +112,12 @@ int	process_map(char *map_file, t_game *game)
 	initialize_player_and_collectibles(game);
 	game->move_count = 0;
 	return (1);
+}
+
+void	get_map_dimensions(char **map, int *height, int *width)
+{
+	*height = 0;
+	*width = ft_strlen(map[0]);
+	while (map[*height])
+		(*height)++;
 }

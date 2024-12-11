@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 20:02:11 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/10 23:38:22 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/11 14:26:48 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <mlx.h>
 # include <stdarg.h>
 # include <stdbool.h>
+# include <stdint.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -129,7 +130,7 @@ int					validate_map(char **map);
 void				update_element_count(char tile, int *player, int *exit,
 						int *collectible);
 int					validate_elements_count(int player, int exit,
-						int collectible);
+						int collectible, char **map);
 int					check_map_elements(char **map);
 int					load_image(t_game *game, char *file, void **img);
 int					print_image_loaded(char *image_name);
@@ -148,6 +149,8 @@ void				free_visited_player(t_game *game, int **visited);
 void				init_directions(int dir_x[4], int dir_y[4]);
 void				check_direction(t_game *game, t_queue *queue, int **visited,
 						t_node *pos);
-int				exit_game_wrapper(void *param);
+int					exit_game_wrapper(void *param);
+void				get_map_dimensions(char **map, int *height, int *width);
+int					check_exit_positions(int i, int j, int width, int height);
 
 #endif

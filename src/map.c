@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 21:10:24 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/10 23:28:27 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/11 10:49:36 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,3 @@ int	exit_game_wrapper(void *param)
 	exit_game(game);
 	return (0);
 }
-

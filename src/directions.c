@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 20:57:41 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/10 23:26:02 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/11 14:33:36 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,12 @@ void	free_visited(int **visited, int height)
 		i++;
 	}
 	free(visited);
+}
+
+int	check_exit_positions(int i, int j, int width, int height)
+{
+	if ((i == 0 && (j == 0 || j == width - 1)) || (i == height - 1 && (j == 0
+				|| j == width - 1)))
+		return (0);
+	return (1);
 }
