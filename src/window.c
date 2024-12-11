@@ -51,7 +51,7 @@ int	init_window(t_game *game)
 void	handle_events(t_game *game)
 {
 	mlx_key_hook(game->win, handle_key, game);
-	mlx_hook(game->win, 17, 0, (int (*)(void *))exit_game, game);
+	mlx_hook(game->win, 17, 0, exit_game_wrapper, game);
 	mlx_loop(game->mlx);
 }
 
