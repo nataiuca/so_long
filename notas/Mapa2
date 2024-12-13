@@ -1,0 +1,78 @@
+Mapa 2
+El reporte de Valgrind muestra que tu programa tiene varios problemas relacionados con fugas de memoria. A continuación, analizaremos los detalles y te proporcionaremos recomendaciones para solucionarlos.
+
+Análisis del reporte
+Fugas de memoria:
+Definitivamente perdido:
+
+25,968 bytes en 271 bloques están definitivamente perdidos.
+Este es el tipo de fuga de memoria más grave, ya que significa que hay memoria que ha sido asignada, pero nunca se ha liberado. La memoria perdida es irrecoverable, ya que no hay más punteros que apunten a esos bloques.
+Indirectamente perdido:
+
+576 bytes en 6 bloques están indirectamente perdidos.
+Esto significa que la memoria fue liberada de manera indirecta, probablemente porque un puntero a un bloque de memoria se perdió o nunca fue manejado correctamente.
+Aún accesible (reachable):
+
+134,900 bytes en 256 bloques están accesibles.
+Esto no es una fuga en sí misma, pero indica que hay memoria que todavía se puede acceder. Sin embargo, si no se libera correctamente al final del programa, podría convertirse en una fuga a largo plazo.
+Errores específicos:
+En el reporte, se destacan varias asignaciones de memoria que no fueron liberadas:
+
+arduino
+Copy code
+==900729== 624 bytes in 1 blocks are definitely lost in loss record 50 of 66
+==900729==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==900729==    by 0x10F9CE: init_visited_player (in /home/natferna/cursus/nata/so_long)
+==900729==    by 0x10F50B: move_player (in /home/natferna/cursus/nata/so_long)
+Esto sugiere que la función init_visited_player está causando una fuga de memoria. Lo mismo ocurre con otras funciones (move_player, handle_key) y las mismas líneas de código están involucradas.
+
+Posibles causas:
+Memoria no liberada en funciones como init_visited_player. Puede ser que en estas funciones estés utilizando malloc para asignar memoria pero nunca la liberes con free después de usarla.
+
+Fugas acumulativas en estructuras dinámicas o arrays dinámicos que no se liberan correctamente. El uso de malloc en múltiples lugares de tu programa sin una llamada correspondiente a free podría acumularse y causar estas fugas.
+
+Soluciones recomendadas:
+Revisar y liberar memoria en cada función donde uses malloc, calloc o new. Asegúrate de que cada bloque de memoria que asignas sea liberado con free o delete cuando ya no lo necesites.
+
+En tu caso, parece que las fugas están asociadas con init_visited_player y funciones relacionadas. Asegúrate de que la memoria asignada allí se libere correctamente cuando ya no se use.
+
+Ejemplo:
+
+c
+Copy code
+// Función que asigna memoria
+void init_visited_player() {
+    char *visited = malloc(100);  // Asignación de memoria
+    if (!visited) {
+        // Manejo de error
+    }
+    // Uso de la memoria...
+    free(visited);  // Liberación de la memoria
+}
+Revisar estructuras dinámicas (como matrices, listas, etc.) y asegurarte de que los elementos de estas estructuras también se liberen correctamente. Si tienes una lista enlazada o una matriz dinámica, asegúrate de liberar todos los nodos o elementos dentro de ella antes de liberar la estructura principal.
+
+Comprobar que no haya retornos anticipados o excepciones en tu código que puedan hacer que se omitan las llamadas a free. Si estás utilizando varios puntos de salida (como retornos anticipados), asegúrate de que la memoria se libere antes de cualquier retorno.
+
+Uso de punteros inteligentes (C++): Si estás trabajando en C++, considera usar punteros inteligentes como std::unique_ptr o std::shared_ptr. Estos punteros se encargan de liberar automáticamente la memoria cuando dejan de ser utilizados, lo que minimiza las fugas de memoria.
+
+Ejecutar nuevamente con --leak-check=full para obtener más detalles sobre las fugas de memoria. Esto te proporcionará información más precisa sobre qué funciones y líneas están causando las fugas:
+
+bash
+Copy code
+valgrind --leak-check=full --show-leak-kinds=all ./so_long
+Revisar punteros a estructuras complejas: Si utilizas estructuras complejas, como listas, árboles o gráficos, asegúrate de que cada nodo, objeto o elemento sea correctamente liberado.
+
+Conclusión
+El reporte de Valgrind indica que tu programa tiene fugas de memoria significativas, especialmente en funciones como init_visited_player, que asigna memoria pero no la libera. Para resolver estos problemas:
+
+Asegúrate de liberar toda la memoria dinámica que se asigna en tu programa.
+Revisa cada función que use malloc, calloc, o new y asegúrate de que tenga una llamada correspondiente a free o delete.
+Ejecuta nuevamente el programa con --leak-check=full para obtener más detalles y confirmar que todas las fugas se solucionaron.
+Siguiendo estos pasos, podrás eliminar las fugas de memoria y mejorar la eficiencia y estabilidad de tu programa.
+
+
+
+
+
+
+ChatGPT can make mistakes. Check important info.
