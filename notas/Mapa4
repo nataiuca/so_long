@@ -1,0 +1,100 @@
+Mapa 4
+El reporte de Valgrind para tu programa muestra que ahora tienes una fuga de memoria más pequeña (40 bytes en 1 bloque), además de algunos otros problemas relacionados con valores no inicializados y accesibilidad de elementos en el mapa.
+
+Análisis del reporte
+Fugas de memoria:
+Definitivamente perdido:
+40 bytes en 1 bloque están definitivamente perdidos. Esto significa que un bloque de memoria fue asignado pero no fue liberado correctamente.
+Indirectamente perdido:
+28 bytes en 4 bloques están indirectamente perdidos. Este tipo de fuga ocurre cuando un bloque de memoria fue asignado, pero un puntero que apunta a este bloque se pierde, lo que impide que se libere correctamente.
+Causas de la fuga:
+El reporte muestra que las fugas están asociadas con la función ft_split y su uso en process_map:
+
+arduino
+Copy code
+==901972== 68 (40 direct, 28 indirect) bytes in 1 blocks are definitely lost in loss record 2 of 2
+==901972==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==901972==    by 0x1105A9: ft_split (in /home/natferna/cursus/nata/so_long)
+==901972==    by 0x11125C: process_map (in /home/natferna/cursus/nata/so_long)
+==901972==    by 0x110CAD: main (in /home/natferna/cursus/nata/so_long)
+La función ft_split está causando la fuga de memoria, probablemente debido a una asignación de memoria dinámica que no se libera adecuadamente después de su uso.
+
+Condicionales basados en valores no inicializados:
+También hay saltos condicionales basados en valores no inicializados:
+
+scss
+Copy code
+==901972== Conditional jump or move depends on uninitialised value(s)
+Este tipo de error ocurre cuando tu programa usa variables cuyo valor no ha sido correctamente inicializado. Esto puede causar comportamientos indefinidos y errores difíciles de depurar.
+
+Mensaje de error en la ejecución:
+El mensaje Error: No path to exit or collectibles unreachable sugiere que el mapa no tiene una solución válida, es decir, no hay un camino accesible a la salida o los coleccionables están inaccesibles. Esto puede ser un problema relacionado con la lógica de búsqueda en el mapa (probablemente en la función bfs o validate_accessibility).
+
+Soluciones recomendadas:
+1. Resolver la fuga de memoria en ft_split:
+La función ft_split parece estar causando una fuga de memoria. ft_split típicamente asigna memoria para un array de cadenas de caracteres (strings) cuando divide una cadena en subcadenas. Asegúrate de que la memoria asignada dentro de esta función se libere correctamente.
+
+Ejemplo de liberación de memoria en ft_split:
+
+c
+Copy code
+// Ejemplo de una posible implementación de ft_split
+char **ft_split(const char *str, char delimiter) {
+    // Asignación de memoria
+    char **split = malloc(sizeof(char*) * (num_tokens + 1));
+    if (!split) {
+        // Manejo de errores
+    }
+
+    // Llenar el array de cadenas...
+    
+    // Asegúrate de liberar la memoria asignada para cada subcadena
+    for (int i = 0; i < num_tokens; ++i) {
+        free(split[i]);  // Liberación de cada subcadena
+    }
+    free(split);  // Liberación del array de punteros
+
+    return split;
+}
+Verifica que todas las subcadenas que creas con malloc también se liberen correctamente cuando ya no se necesiten.
+
+2. Inicialización de variables:
+La advertencia sobre los valores no inicializados implica que algunas variables en tu programa son utilizadas antes de recibir un valor válido. Esto puede causar saltos condicionales incorrectos y otros errores. Asegúrate de inicializar todas las variables antes de usarlas.
+
+Ejemplo de inicialización de variables:
+
+c
+Copy code
+int x = 0;  // Inicialización correcta
+char *str = NULL;  // Inicialización de punteros
+3. Revisa la lógica de accesibilidad (BFS y validación):
+El error No path to exit or collectibles unreachable sugiere que algo en la lógica de validación de accesibilidad del mapa está fallando. Asegúrate de que:
+
+El algoritmo de BFS (Breadth-First Search) esté correctamente implementado.
+Estés marcando correctamente las celdas visitadas y revisando la conectividad entre la salida (exit) y los objetos coleccionables.
+El mapa está bien formado y las celdas accesibles están correctamente identificadas como tales.
+4. Ejecución con opciones detalladas de Valgrind:
+Para obtener más detalles sobre los errores de memoria, puedes ejecutar el programa con --track-origins=yes para rastrear el origen de los valores no inicializados:
+
+bash
+Copy code
+valgrind --track-origins=yes --leak-check=full ./so_long ./maps/map4.ber
+Esto te ayudará a identificar exactamente qué variables están causando problemas por no estar inicializadas.
+
+Conclusión:
+Fugas de memoria: Asegúrate de liberar correctamente la memoria asignada en funciones como ft_split. Cada llamada a malloc o calloc debe ser seguida de una llamada correspondiente a free cuando ya no se necesite esa memoria.
+Inicialización de variables: Inicializa todas las variables antes de usarlas, especialmente las que afectan la lógica de las condicionales.
+Revisar lógica de accesibilidad: Verifica que la lógica de búsqueda (BFS) esté correcta para que todos los elementos sean accesibles como se espera.
+Con estos cambios, deberías poder resolver los problemas de memoria y mejorar la fiabilidad de tu programa.
+
+
+
+Get smarter responses, upload files and images, and more.
+
+Log in
+
+Sign up
+
+
+
+ChatGPT can make mistakes. Check important info.
