@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 13:42:15 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/07 00:29:22 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:09:53 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static char	*ft_word(char const *str, char c)
 	i = 0;
 	while (str[i] && str[i] != c)
 		i++;
-	dest = (char *)malloc(sizeof(char) * i + 1);
+	dest = (char *)malloc(sizeof(char) * (i + 1));
 	if (!dest)
 		return (NULL);
 	i = 0;
@@ -57,12 +57,11 @@ static char	*ft_word(char const *str, char c)
 	return (dest);
 }
 
-static char	**ft_free(char **split, int i)
+static void	ft_free(char **split, int i)
 {
 	while (i--)
 		free(split[i]);
 	free(split);
-	return (NULL);
 }
 
 char	**ft_split(char const *str, char c)
@@ -82,9 +81,10 @@ char	**ft_split(char const *str, char c)
 			str++;
 		if (*str && *str != c)
 		{
-			dest[i++] = ft_word(str, c);
-			if (dest[i - 1] == NULL)
-				return (ft_free(dest, i));
+			dest[i] = ft_word(str, c);
+			if (dest[i] == NULL)
+				return (ft_free(dest, i), NULL);
+			i++;
 			while (*str && *str != c)
 				str++;
 		}

@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 11:08:57 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/11 14:31:40 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/13 16:40:28 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int	bfs(t_game *game)
 		dequeue(queue, &node->x, &node->y);
 		process_node(game, queue, visited, node);
 	}
+	free(node);
 	free_visited(visited, game->height);
 	free_queue(queue);
 	return (game->collected == game->collectibles && game->exit_found);

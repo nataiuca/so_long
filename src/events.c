@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 20:07:29 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/10 23:35:47 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/13 16:40:35 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	move_player(t_game *game, int dx, int dy)
 	new_y = game->player_y + dy;
 	if (!is_valid_move(game, new_x, new_y, visited))
 		return ;
+	free(visited);
 	handle_collectible(game, new_x, new_y);
 	if (handle_exit(game, new_x, new_y))
 		return ;
