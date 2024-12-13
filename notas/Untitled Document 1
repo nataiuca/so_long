@@ -1,0 +1,91 @@
+El reporte que has proporcionado muestra dos tipos principales de problemas en tu programa: valores no inicializados y fugas de memoria.
+
+1. Problema de valores no inicializados
+El reporte contiene varios mensajes de "Conditional jump or move depends on uninitialised value(s)", que indican que tu programa está tomando decisiones (saltos condicionales, como if o while) basadas en valores no inicializados. Este tipo de error puede ser grave porque los valores no inicializados pueden tener contenido aleatorio y afectar el flujo del programa.
+
+Mensajes relevantes:
+arduino
+Copy code
+==900175== Conditional jump or move depends on uninitialised value(s)
+==900175==    at 0x10F48D: handle_exit (in /home/natferna/cursus/nata/so_long)
+==900175==    by 0x10ED98: process_node (in /home/natferna/cursus/nata/so_long)
+==900175==    by 0x10EE87: bfs (in /home/natferna/cursus/nata/so_long)
+==900175==    by 0x10E9F7: validate_accessibility (in /home/natferna/cursus/nata/so_long)
+==900175==    by 0x110CD5: main (in /home/natferna/cursus/nata/so_long)
+==900175==  Uninitialised value was created by a stack allocation
+==900175==    at 0x110C51: main (in /home/natferna/cursus/nata/so_long)
+Cómo solucionarlo:
+El error ocurre porque en alguna parte de tu código se están utilizando variables sin inicializarlas. El mensaje sugiere que la variable no inicializada proviene de una asignación en la pila (stack allocation).
+
+Para solucionarlo, asegúrate de inicializar todas las variables antes de usarlas. Esto incluye tanto las variables locales como las estructuras que puedas estar usando. Por ejemplo:
+
+c
+Copy code
+int x = 0;  // Inicialización de la variable
+Si estás usando una estructura compleja, asegúrate de inicializar cada campo antes de usarlo.
+
+También verifica que cualquier puntero se inicialice a NULL o a una dirección válida antes de ser utilizado.
+
+2. Fugas de memoria
+En cuanto a las fugas de memoria, el reporte indica que aún tienes 672 bytes en 28 bloques de memoria que no se han liberado adecuadamente.
+
+Mensaje relevante:
+yaml
+Copy code
+==900175== LEAK SUMMARY:
+==900175==    definitely lost: 672 bytes in 28 blocks
+==900175==    indirectly lost: 0 bytes in 0 blocks
+==900175==      possibly lost: 0 bytes in 0 blocks
+==900175==    still reachable: 110,356 bytes in 138 blocks
+Cómo solucionarlo:
+Definitivamente perdido significa que has solicitado memoria (por ejemplo, con malloc, calloc o new) y nunca la has liberado con free o delete.
+
+Asegúrate de que cada bloque de memoria que se asigna se libere cuando ya no se necesite.
+
+Verifica que cada llamada a funciones como malloc o calloc esté seguida de una llamada correspondiente a free en el lugar adecuado:
+
+c
+Copy code
+char *str = malloc(100);
+// ... Uso de str
+free(str);  // Asegúrate de liberar la memoria
+Si estás trabajando con estructuras dinámicas (por ejemplo, listas, árboles, etc.), asegúrate de liberar recursivamente cada elemento.
+
+Además, asegúrate de liberar todos los recursos que se pueden perder en funciones de retorno anticipado o en bloques if, else, etc.
+
+3. Estrategias adicionales
+Uso de punteros inteligentes (C++): Si estás programando en C++, usa punteros inteligentes como std::unique_ptr o std::shared_ptr, que se encargan de liberar automáticamente la memoria cuando el puntero ya no es necesario.
+
+Ejemplo de liberación de memoria de una lista enlazada:
+
+Si estás utilizando una lista enlazada, asegúrate de liberar cada nodo correctamente:
+
+c
+Copy code
+void free_list(Node *head) {
+    Node *temp;
+    while (head != NULL) {
+        temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+4. Ejecución con --leak-check=full
+Para obtener más detalles sobre las fugas de memoria, ejecuta tu programa con el siguiente comando:
+
+bash
+Copy code
+valgrind --leak-check=full ./so_long ./maps/map1.ber
+Esto te dará información más detallada sobre la ubicación exacta donde se está perdiendo la memoria.
+
+En resumen:
+Inicializa todas las variables antes de usarlas.
+Libera la memoria después de que ya no sea necesaria (usando free o delete).
+Usa herramientas como --leak-check=full y revisa los detalles para identificar las ubicaciones exactas de las fugas.
+Asegúrate de que todas las rutas de ejecución liberan la memoria adecuadamente (considera excepciones o retornos anticipados).
+
+
+
+
+
+
