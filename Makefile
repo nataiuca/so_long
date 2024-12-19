@@ -23,7 +23,7 @@ MLX = -lmlx -lX11 -lXext -lm
 SRCS = $(wildcard src/*.c)
 
 INCLUD = ./includes/so_long.h \
-            ./includes/mlx.h
+            ./minilibx/mlx.h
 
 OBJS = $(SRCS:.c=.o)
 

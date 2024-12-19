@@ -64,11 +64,59 @@ typedef struct s_game
 	int				collectibles;
 	int				move_count;
 }					t_game;
-
-int					process_map(char *file, t_game *game);
-int					init_window(t_game *game);
-void				render_map(t_game *game);
-void				handle_events(t_game *game);
+//A0_read
+char	*read_loop(int fd, char *content, size_t *total_size);
+char	*read_file(const char *filename);
+char	*append_content(char *content, char *buffer, size_t *size,ssize_t bytes);
+void	clean_visited(int **visited);
+//A1_clean
+void 				clean_node(t_node *node);
+void 				clean_graphics(t_game *game);
+void 				clean_queue(t_queue *queue);
+void 				clean_game(t_game *game);
+void	clean_map(char **map);
+//A2_load
+int	load_map(char *map_file, t_game *game);
+void	load_elements(t_game *game);
+void	load_tile(t_game *game, int x, int y);
+int	load_image(t_game *game, char *file, void **img, char *image_name);
+//A3_map
+void	get_map_size(char **map, int *height, int *width);
+int	is_valid_map(char **map);
+int valid_map_elements(char **map);
+int valid_map_dimensions(char **map);
+int valid_map_borders(char **map);
+//A4_accessibility
+int	is_accessible(t_game *game);
+int	**init_visited(int width, int height);
+void	process_node(t_game *game, t_queue *queue, int **visited, t_node *node);
+int	is_valid_move(t_game *game, int x, int y, int **visited);
+bool steps_remaining(t_queue *queue);
+//A5_path
+int start_path(t_game *game, t_queue **queue, int ***visited);
+void	enqueue(t_queue *queue, int x, int y);
+void	dequeue(t_queue *queue, int *x, int *y);
+void find_path(t_game *game, t_queue *queue, int **visited,t_node *pos);
+void head_direction(t_game *game, t_queue *queue, int **visited,t_node *pos);
+//A6_events
+void	handle_events(t_game *game);
+int	handle_key(int keycode, t_game *game);
+void handle_collectible(t_game *game, int x, int y);
+int	handle_exit(t_game *game, int x, int y);
+int	exit_event(void *param);
+//A7_window
+int	init_window(t_game *game);
+void	render_map(t_game *game);
+void	render_tile(t_game *game, int x, int y);
+void	render_row(t_game *game, int y);
+void    close_game(t_game *game,char *message);
+//A8_move
+void	move_player(t_game *game, int dx, int dy);
+int	is_exit_found(t_game *game, int x, int y);
+int valid_tile(char tile);
+t_queue	*create_queue(int capacity);
+t_node *peek(t_queue *queue) ;
+//General
 char				*get_next_line(int fd);
 size_t				ft_strlen(const char *s);
 char				*ft_strjoin(char *s1, char *s2);
@@ -88,69 +136,6 @@ int					ft_put_hex(unsigned int n, char *base);
 int					ft_put_hex_ptr(uintptr_t num);
 int					ft_putnbr(long nb);
 char				**ft_split(char const *s, char c);
-int					**init_visited(int width, int height);
-void				free_visited(int **visited, int height);
-int					validate_accessibility(t_game *game);
-void				free_map(char **map);
-void				find_exit_position(char **map, t_game *game, int *exit_x,
-						int *exit_y);
-int					**allocate_visited(int width, int height);
-int					is_exit_found(t_game *game, int x, int y);
-void				check_neighbors(t_game *game, t_queue *queue, int **visited,
-						t_node *pos);
-int					bfs(t_game *game);
-int					is_exit_reachable_after_collectibles(t_game *game);
-void				check_exit_accessibility(t_game *game);
-int					check_row_borders(char *row);
-int					check_valid_elements(char *row);
-int					check_map_dimensions(char **map, int *width);
-int					handle_exit(t_game *game, int x, int y);
-void				move_player(t_game *game, int dx, int dy);
-int					handle_key(int keycode, t_game *game);
-void				free_map_rows(int **visited, int height);
-void				free_resources(int **visited, t_queue *queue, int height);
-int					is_valid_move(t_game *game, int x, int y, int **visited);
-void				handle_collectible(t_game *game, int x, int y);
-int					handle_exit(t_game *game, int x, int y);
-void				find_exit_position(char **map, t_game *game, int *exit_x,
-						int *exit_y);
-void				mark_exit_as_wall(char **map, t_game *game);
-char				*append_content(char *content, char *buffer, size_t *size,
-						ssize_t bytes);
-int					process_map(char *map_file, t_game *game);
-t_queue				*create_queue(int capacity);
-bool				is_queue_empty(t_queue *queue);
-void				enqueue(t_queue *queue, int x, int y);
-void				dequeue(t_queue *queue, int *x, int *y);
-void				free_queue(t_queue *queue);
-void				render_tile(t_game *game, int x, int y);
-void				render_row(t_game *game, int y);
-void				render_map(t_game *game);
-int					validate_map(char **map);
-void				update_element_count(char tile, int *player, int *exit,
-						int *collectible);
-int					validate_elements_count(int player, int exit,
-						int collectible, char **map);
-int					check_map_elements(char **map);
-int					load_image(t_game *game, char *file, void **img);
-int					print_image_loaded(char *image_name);
-int					init_window(t_game *game);
-void				handle_events(t_game *game);
-void				exit_game(t_game *game);
-int					check_row(char *row, int width);
-void				initialize_player_and_collectibles(t_game *game);
-void				process_tile(t_game *game, int x, int y);
-void				check_exit_collision(t_game *game, int x, int y);
 void				free_split(char **split_array);
-int					check_elements(char element, int *player_found,
-						int *exit_found, int *collectible_found);
-void				init_visited_player(t_game *game, int ***visited);
-void				free_visited_player(t_game *game, int **visited);
-void				init_directions(int dir_x[4], int dir_y[4]);
-void				check_direction(t_game *game, t_queue *queue, int **visited,
-						t_node *pos);
-int					exit_game_wrapper(void *param);
-void				get_map_dimensions(char **map, int *height, int *width);
-int					check_exit_positions(int i, int j, int width, int height);
 
 #endif
