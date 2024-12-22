@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   A3_map.c                                           :+:      :+:    :+:   */
+/*   N3_map.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 21:52:13 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/16 21:52:13 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/19 20:38:12 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../includes/so_long.h"
 #include <stdlib.h>
+#include <string.h>
 
 void	get_map_size(char **map, int *height, int *width)
 {
@@ -41,7 +43,9 @@ int valid_map_elements(char **map)
 	int	j;
 	int	map_items[3];
     int tile_type;
+
 	i = 0;
+	ft_memset(map_items, 0, sizeof(map_items));;
 	while (map[i])
 	{
 		j = 0;
@@ -57,6 +61,7 @@ int valid_map_elements(char **map)
 		}
 		i++;
 	}
+	ft_printf("player, exit, collectibles %d %d %d \n", map_items[0], map_items[1], map_items[2]);
 	return (map_items[0] == 1 && map_items[1] == 1 && map_items[2]  >= 1);
 }
 int valid_map_dimensions(char **map)
@@ -101,7 +106,7 @@ int valid_map_borders(char **map)
                 j++;
             }
         }
-        if(map[i][0]!='1'||map[i][width]!='1')
+        if(map[i][0]!='1'||map[i][width - 1]!='1')
             return (ft_printf("Error: valid_map_borders - \
                     Invalid vertical border.\n", i),0);
         i++;

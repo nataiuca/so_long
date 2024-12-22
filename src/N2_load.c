@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   A2_load.c                                          :+:      :+:    :+:   */
+/*   N2_load.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 21:35:53 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/16 21:35:53 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/22 20:39:20 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,13 @@ int	load_image(t_game *game, char *file, void **img, char *image_name)
 	&game->img_width, &game->img_height);
     if(*img != NULL) ft_printf("%s loaded\n", image_name);
 	return (*img != NULL);
+}
+
+void	safe_free(void **ptr)
+{
+	if (ptr && *ptr) 
+	{
+        free(*ptr);
+        *ptr = NULL;
+	}
 }

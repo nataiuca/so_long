@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   A8_move.c                                          :+:      :+:    :+:   */
+/*   N8_move.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 20:10:41 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/18 20:10:41 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/22 21:54:18 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	move_player(t_game *game, int dx, int dy)
 	new_y = game->player_y + dy;
 	if (!is_valid_move(game, new_x, new_y, visited))
 		return ;
-	clean_visited(visited);
+	clean_visited(visited, game->height);
 
 	handle_collectible(game, new_x, new_y);
 	if (handle_exit(game, new_x, new_y))
@@ -64,8 +64,14 @@ t_queue	*create_queue(int capacity)
 	t_queue	*queue;
 
 	queue = (t_queue *)malloc(sizeof(t_queue));
+	if (!queue)
+		return (NULL);
 	queue->x = (int *)malloc(sizeof(int) * capacity);
+	if (!queue->x)
+		return (NULL);
 	queue->y = (int *)malloc(sizeof(int) * capacity);
+	if (!queue->y)
+		return (NULL);
 	queue->front = -1;
 	queue->rear = -1;
 	queue->capacity = capacity;
@@ -78,7 +84,7 @@ t_node *peek(t_queue *queue)
 	node = malloc(sizeof(t_node));
     if (node == NULL)
         return NULL;
-    if (!queue->front) 
+    if (queue->front == -1) 
 	{
         return NULL; // Retorna NULL si la cola está vacía
     }

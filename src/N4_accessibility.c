@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   A4_accessibility.c                                 :+:      :+:    :+:   */
+/*   N4_accessibility.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 19:11:14 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/18 19:11:14 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/22 21:54:38 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,6 @@ int	is_accessible(t_game *game)
 	int		**visited;
 	t_node	*node;
 
-	node = malloc(sizeof(t_node));
-	if (!node)
-		return (ft_printf("Error: is_accessible -\
-		 Unable to allocate node memory.\n"),0);
 	visited = init_visited(game->width, game->height);
 	if (!visited)
 		return (ft_printf("Error: is_accessible -\
@@ -31,12 +27,15 @@ int	is_accessible(t_game *game)
 	while (steps_remaining(queue))
 	{
 		node=peek(queue);
+		if (!node)
+			break ;
+		ft_printf("explorando %d, %d\n", node->x, node->y);
 		dequeue(queue, &node->x, &node->y);
 		process_node(game, queue, visited, node);
+		clean_node(node);
 	}
-	clean_node(node);
 	clean_queue(queue);
-	clean_visited(visited);
+	clean_visited(visited, game->height);
 	return (game->collected == game->collectibles && game->exit_found);
 }
 int	**init_visited(int width, int height)
@@ -79,6 +78,8 @@ void	process_node(t_game *game, t_queue *queue, int **visited, t_node *node)
 }
 int	is_valid_move(t_game *game, int x, int y, int **visited)
 {
+	if(!visited)
+		return (0);
 	return (x >= 0 && x < game->width && y >= 0 && y < game->height
 		&& !visited[y][x] && game->map[y][x] != '1');
 }
