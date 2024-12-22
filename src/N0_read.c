@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 21:29:18 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/22 21:53:15 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/22 22:03:29 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*read_loop(int fd, char *content, size_t *total_size)
 
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
-		return (safe_free((void**)&content), NULL);
+		return (safe_free((void **)&content), NULL);
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	while (bytes_read > 0)
 	{
@@ -34,7 +34,7 @@ char	*read_loop(int fd, char *content, size_t *total_size)
 	}
 	free(buffer);
 	if (bytes_read < 0)
-		return (safe_free((void**)&content), NULL);
+		return (safe_free((void **)&content), NULL);
 	return (content);
 }
 
@@ -67,7 +67,7 @@ char	*append_content(char *content, char *buffer, size_t *size,
 	new_size = *size + bytes;
 	new_content = malloc(new_size + 1);
 	if (!new_content)
-		return (safe_free((void**)&content), NULL);
+		return (safe_free((void **)&content), NULL);
 	i = 0;
 	while (i < *size)
 	{
@@ -85,21 +85,23 @@ char	*append_content(char *content, char *buffer, size_t *size,
 	return (new_content);
 }
 
-void clean_visited(int **visited, int height)
+void	clean_visited(int **visited, int height)
 {
-    if (visited == NULL)  // Si el puntero a la matriz es NULL, no hacemos nada
-        return;
+	int	i;
 
-    int i = 0;
-    while (i < height && visited[i] != NULL)  // Mientras haya filas por liberar y dentro del tamaño válido
-    {
-        ft_printf("limpiando fila %d\n", i);
-        free(visited[i]);  // Liberamos la memoria de la fila actual
-        visited[i] = NULL;  // Asignamos NULL para evitar accesos accidentales
-        i++;  // Avanzamos a la siguiente fila
-    }
-
-    ft_printf("limpiando visited\n");
-    free(visited);  // Finalmente, liberamos el puntero principal de la matriz
-    // No es necesario hacer visited = NULL aquí, ya que esto no afecta al puntero original.
+	if (visited == NULL) // Si el puntero a la matriz es NULL, no hacemos nada
+		return ;
+	i = 0;
+	while (i < height && visited[i] != NULL)
+		// Mientras haya filas por liberar y dentro del tamaño válido
+	{
+		ft_printf("limpiando fila %d\n", i);
+		free(visited[i]);  // Liberamos la memoria de la fila actual
+		visited[i] = NULL; // Asignamos NULL para evitar accesos accidentales
+		i++;               // Avanzamos a la siguiente fila
+	}
+	ft_printf("limpiando visited\n");
+	free(visited); // Finalmente, liberamos el puntero principal de la matriz
+	// No es necesario hacer visited = NULL aquí,
+		ya que esto no afecta al puntero original.
 }
