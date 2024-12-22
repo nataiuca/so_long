@@ -31,11 +31,16 @@ void	clean_graphics(t_game *game)
 {
 	if (!game)
 		return ;
-	free_graphic(game->mlx, game->wall_img);
-	free_graphic(game->mlx, game->player_img);
-	free_graphic(game->mlx, game->exit_img);
-	free_graphic(game->mlx, game->collectible_img);
-	free_graphic(game->mlx, game->empty_img);
+	if (game->wall_img)
+		free_graphic(game->mlx, game->wall_img);
+	if (game->player_img)
+		free_graphic(game->mlx, game->player_img);
+	if (game->exit_img)
+		free_graphic(game->mlx, game->exit_img);
+	if (game->collectible_img)
+		free_graphic(game->mlx, game->collectible_img);
+	if (game->empty_img)
+		free_graphic(game->mlx, game->empty_img);
 }
 
 void	clean_queue(t_queue *queue)
