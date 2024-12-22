@@ -82,6 +82,7 @@ void	render_row(t_game *game, int y)
 void	close_game(t_game *game, char *message)
 {
 	ft_printf("%s\n", message);
-	clean_game(game);
+	if (game)
+		clean_game(game);
 	exit(0);
 }
