@@ -17,6 +17,7 @@ int	main(int argc, char **argv)
 	t_game	*game;
 
 	game = malloc(sizeof(t_game));
+	ft_memset(game, 0, sizeof(t_game));
 	if (argc != 2)
 		return (ft_printf("Usage: ./so_long <map_file>\n"), 1);
 	if (!load_map(argv[1], game))
