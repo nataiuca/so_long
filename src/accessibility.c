@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   N4_accessibility.c                                 :+:      :+:    :+:   */
+/*   accessibility.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 19:11:14 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/22 21:54:38 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/22 22:44:31 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,14 @@ int	is_accessible(t_game *game)
 	visited = init_visited(game->width, game->height);
 	if (!visited)
 		return (ft_printf("Error: is_accessible -\
-		 Unable to initialize visited.\n"),0);
+			Unable to initialize visited.\n"), 0);
 	if (!start_path(game, &queue, &visited))
 		return (0);
 	while (steps_remaining(queue))
 	{
-		node=peek(queue);
+		node = peek(queue);
 		if (!node)
 			break ;
-		ft_printf("explorando %d, %d\n", node->x, node->y);
 		dequeue(queue, &node->x, &node->y);
 		process_node(game, queue, visited, node);
 		clean_node(node);
@@ -38,6 +37,7 @@ int	is_accessible(t_game *game)
 	clean_visited(visited, game->height);
 	return (game->collected == game->collectibles && game->exit_found);
 }
+
 int	**init_visited(int width, int height)
 {
 	int	**visited;
@@ -63,6 +63,7 @@ int	**init_visited(int width, int height)
 	}
 	return (visited);
 }
+
 void	process_node(t_game *game, t_queue *queue, int **visited, t_node *node)
 {
 	handle_collectible(game, node->x, node->y);
@@ -76,14 +77,16 @@ void	process_node(t_game *game, t_queue *queue, int **visited, t_node *node)
 	else
 		find_path(game, queue, visited, node);
 }
+
 int	is_valid_move(t_game *game, int x, int y, int **visited)
 {
-	if(!visited)
+	if (!visited)
 		return (0);
 	return (x >= 0 && x < game->width && y >= 0 && y < game->height
 		&& !visited[y][x] && game->map[y][x] != '1');
 }
-bool steps_remaining(t_queue *queue)
+
+bool	steps_remaining(t_queue *queue)
 {
 	return (queue->front != -1);
 }

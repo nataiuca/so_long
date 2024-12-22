@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   N8_move.c                                          :+:      :+:    :+:   */
+/*   move.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 20:10:41 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/22 21:54:18 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/22 22:07:31 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,12 @@ void	move_player(t_game *game, int dx, int dy)
 	int	new_y;
 	int	**visited;
 
-	visited = init_visited(game->width,game->height);
+	visited = init_visited(game->width, game->height);
 	new_x = game->player_x + dx;
 	new_y = game->player_y + dy;
 	if (!is_valid_move(game, new_x, new_y, visited))
 		return ;
 	clean_visited(visited, game->height);
-
 	handle_collectible(game, new_x, new_y);
 	if (handle_exit(game, new_x, new_y))
 		return ;
@@ -45,20 +44,23 @@ int	is_exit_found(t_game *game, int x, int y)
 {
 	return (game->map[y][x] == 'E');
 }
-int valid_tile(char tile)
+
+int	valid_tile(char tile)
 {
-    if (tile=='P')
-        return 1;
-    else if (tile=='E')
-        return 2;
-    else if (tile=='C')
-        return 3;
-    else if (tile=='0')
-        return 4;
-    else if (tile=='1')
-        return 4;
-    else return 0;
+	if (tile == 'P')
+		return (1);
+	else if (tile == 'E')
+		return (2);
+	else if (tile == 'C')
+		return (3);
+	else if (tile == '0')
+		return (4);
+	else if (tile == '1')
+		return (4);
+	else
+		return (0);
 }
+
 t_queue	*create_queue(int capacity)
 {
 	t_queue	*queue;
@@ -77,19 +79,19 @@ t_queue	*create_queue(int capacity)
 	queue->capacity = capacity;
 	return (queue);
 }
-t_node *peek(t_queue *queue) 
+
+t_node	*peek(t_queue *queue)
 {
 	t_node	*node;
 
 	node = malloc(sizeof(t_node));
-    if (node == NULL)
-        return NULL;
-    if (queue->front == -1) 
+	if (node == NULL)
+		return (NULL);
+	if (queue->front == -1)
 	{
-        return NULL; // Retorna NULL si la cola está vacía
-    }
-	node->x = queue->x[queue->front];  // Asigna la coordenada x
-    node->y = queue->y[queue->front];  // Asigna la coordenada y
-    return node;
+		return (NULL);
+	}
+	node->x = queue->x[queue->front];
+	node->y = queue->y[queue->front];
+	return (node);
 }
-

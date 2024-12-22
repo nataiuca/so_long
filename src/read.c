@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   N0_read.c                                          :+:      :+:    :+:   */
+/*   read.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 21:29:18 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/22 22:03:29 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/22 23:44:43 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,25 +83,4 @@ char	*append_content(char *content, char *buffer, size_t *size,
 	new_content[new_size] = '\0';
 	*size = new_size;
 	return (new_content);
-}
-
-void	clean_visited(int **visited, int height)
-{
-	int	i;
-
-	if (visited == NULL) // Si el puntero a la matriz es NULL, no hacemos nada
-		return ;
-	i = 0;
-	while (i < height && visited[i] != NULL)
-		// Mientras haya filas por liberar y dentro del tamaño válido
-	{
-		ft_printf("limpiando fila %d\n", i);
-		free(visited[i]);  // Liberamos la memoria de la fila actual
-		visited[i] = NULL; // Asignamos NULL para evitar accesos accidentales
-		i++;               // Avanzamos a la siguiente fila
-	}
-	ft_printf("limpiando visited\n");
-	free(visited); // Finalmente, liberamos el puntero principal de la matriz
-	// No es necesario hacer visited = NULL aquí,
-		ya que esto no afecta al puntero original.
 }

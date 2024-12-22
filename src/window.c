@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   N7_window.c                                        :+:      :+:    :+:   */
+/*   window.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 19:56:25 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/22 20:45:41 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/22 22:50:06 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,19 @@ int	init_window(t_game *game)
 	game->mlx = mlx_init();
 	if (!game->mlx)
 		return (0);
-	game->win = mlx_new_window(game->mlx, game->width * \
-	TILE_SIZE, game->height * TILE_SIZE, "So Long");
+	game->win = mlx_new_window(game->mlx, game->width * TILE_SIZE, game->height
+			* TILE_SIZE, "So Long");
 	if (!game->win)
 		return (0);
-	if (!load_image(game, "images/wall.xpm", &game->wall_img,"wall") \
-		|| !load_image(game, "images/player.xpm", &game->player_img,"player") \
-		|| !load_image(game, "images/exit.xpm", &game->exit_img,"exit") \
-		|| !load_image(game, "images/collectible.xpm", &game->collectible_img,"collectible") \
-		|| !load_image(game, "images/empty.xpm", &game->empty_img,"empty"))
+	if (!load_image(game, "images/wall.xpm", &game->wall_img)
+		|| !load_image(game, "images/player.xpm", &game->player_img)
+		|| !load_image(game, "images/exit.xpm", &game->exit_img)
+		|| !load_image(game, "images/collectible.xpm", &game->collectible_img)
+		|| !load_image(game, "images/empty.xpm", &game->empty_img))
 		return (0);
 	return (1);
 }
+
 void	render_map(t_game *game)
 {
 	int	y;
@@ -42,6 +43,7 @@ void	render_map(t_game *game)
 		y++;
 	}
 }
+
 void	render_tile(t_game *game, int x, int y)
 {
 	void	*img;
@@ -63,6 +65,7 @@ void	render_tile(t_game *game, int x, int y)
 		mlx_put_image_to_window(game->mlx, game->win, img, x * TILE_SIZE, y
 			* TILE_SIZE);
 }
+
 void	render_row(t_game *game, int y)
 {
 	int	x;
@@ -75,9 +78,10 @@ void	render_row(t_game *game, int y)
 		x++;
 	}
 }
-void    close_game(t_game *game,char *message)
+
+void	close_game(t_game *game, char *message)
 {
-    ft_printf("%s\n", message);
+	ft_printf("%s\n", message);
 	clean_game(game);
 	exit(0);
 }

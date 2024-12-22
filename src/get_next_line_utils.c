@@ -21,8 +21,8 @@ size_t	ft_strlen(const char *s)
 	{
 		if (s[len] != '\n')
 			len++;
-		else if (s[len] == '\n' && s[len + 1] == '\0') 
-            break;
+		else if (s[len] == '\n' && s[len + 1] == '\0')
+			break ;
 	}
 	return (len);
 }

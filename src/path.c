@@ -1,20 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   A5_path.c                                          :+:      :+:    :+:   */
+/*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 19:30:10 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/18 19:30:10 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/22 22:41:09 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/so_long.h"
 
-int start_path(t_game *game, t_queue **queue, int ***visited)
+int	start_path(t_game *game, t_queue **queue, int ***visited)
 {
-
 	*queue = create_queue(game->width * game->height);
 	if (!*visited || !*queue)
 		return (0);
@@ -22,6 +21,7 @@ int start_path(t_game *game, t_queue **queue, int ***visited)
 	(*visited)[game->player_y][game->player_x] = 1;
 	return (1);
 }
+
 void	enqueue(t_queue *queue, int x, int y)
 {
 	if (queue->rear == queue->capacity - 1)
@@ -32,6 +32,7 @@ void	enqueue(t_queue *queue, int x, int y)
 	queue->x[queue->rear] = x;
 	queue->y[queue->rear] = y;
 }
+
 void	dequeue(t_queue *queue, int *x, int *y)
 {
 	if (!steps_remaining(queue))
@@ -46,7 +47,8 @@ void	dequeue(t_queue *queue, int *x, int *y)
 	else
 		queue->front++;
 }
-void find_path(t_game *game, t_queue *queue, int **visited,t_node *pos)
+
+void	find_path(t_game *game, t_queue *queue, int **visited, t_node *pos)
 {
 	pos->dir = 0;
 	while (pos->dir < 4)
@@ -55,14 +57,22 @@ void find_path(t_game *game, t_queue *queue, int **visited,t_node *pos)
 		pos->dir++;
 	}
 }
-void head_direction(t_game *game, t_queue *queue, int **visited,
-		t_node *pos)
+
+void	head_direction(t_game *game, t_queue *queue, int **visited, t_node *pos)
 {
 	int	nx;
 	int	ny;
-	int	dir_x[4]={-1,0,1,0};
-	int	dir_y[4]={0,1,0,-1};
-    
+	int	dir_x[4];
+	int	dir_y[4];
+
+	dir_x[0] = -1;
+	dir_x[1] = 0;
+	dir_x[2] = 1;
+	dir_x[3] = 0;
+	dir_y[0] = 0;
+	dir_y[1] = 1;
+	dir_y[2] = 0;
+	dir_y[3] = -1;
 	nx = pos->x + dir_x[pos->dir];
 	ny = pos->y + dir_y[pos->dir];
 	if (is_valid_move(game, nx, ny, visited))

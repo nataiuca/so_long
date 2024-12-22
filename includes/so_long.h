@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 20:02:11 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/22 21:57:18 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/22 23:51:49 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ char				*read_loop(int fd, char *content, size_t *total_size);
 char				*read_file(const char *filename);
 char				*append_content(char *content, char *buffer, size_t *size,
 						ssize_t bytes);
-void clean_visited(int **visited, int height);
+void				clean_visited(int **visited, int height);
+void				free_graphic(void *mlx, void *img);
 void				clean_node(t_node *node);
 void				clean_graphics(t_game *game);
 void				clean_queue(t_queue *queue);
@@ -78,9 +79,8 @@ void				clean_map(char **map);
 int					load_map(char *map_file, t_game *game);
 void				load_elements(t_game *game);
 void				load_tile(t_game *game, int x, int y);
-int					load_image(t_game *game, char *file, void **img,
-						char *image_name);
-void	safe_free(void **ptr);
+int					load_image(t_game *game, char *file, void **img);
+void				safe_free(void **ptr);
 void				get_map_size(char **map, int *height, int *width);
 int					is_valid_map(char **map);
 int					valid_map_elements(char **map);

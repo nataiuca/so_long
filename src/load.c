@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   N2_load.c                                          :+:      :+:    :+:   */
+/*   load.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 21:35:53 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/22 20:39:20 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/22 23:53:43 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,18 @@ int	load_map(char *map_file, t_game *game)
 	{
 		free(map_content);
 		return (ft_printf("Error: Load_map -Map file could not be loaded.\n"),
-        0);
+			0);
 	}
 	game->map = ft_split(map_content, '\n');
 	free(map_content);
 	if (!game->map || !game->map[0])
 		return (ft_printf("Error: Load_map - Empty map.\n"), 0);
-	get_map_size(game->map,&game->height,&game->width);
-    ft_printf("Map loaded: width = %d, height = %d\n", game->width,
-		game->height);
+	get_map_size(game->map, &game->height, &game->width);
 	if (!is_valid_map(game->map))
 		return (ft_printf("Error: Load_map - Invalid map.\n"), 0);
-	return (load_elements(game),1);
+	return (load_elements(game), 1);
 }
+
 void	load_elements(t_game *game)
 {
 	int	y;
@@ -51,9 +50,9 @@ void	load_elements(t_game *game)
 		}
 		y++;
 	}
-	ft_printf("Coleccionables totales: %d\n", game->collectibles);
-    game->move_count = 0;
+	game->move_count = 0;
 }
+
 void	load_tile(t_game *game, int x, int y)
 {
 	if (game->map[y][x] == 'P')
@@ -63,21 +62,20 @@ void	load_tile(t_game *game, int x, int y)
 	}
 	else if (game->map[y][x] == 'C')
 		game->collectibles++;
-
 }
-int	load_image(t_game *game, char *file, void **img, char *image_name)
+
+int	load_image(t_game *game, char *file, void **img)
 {
-	*img = mlx_xpm_file_to_image(game->mlx, file, \
-	&game->img_width, &game->img_height);
-    if(*img != NULL) ft_printf("%s loaded\n", image_name);
+	*img = mlx_xpm_file_to_image(game->mlx, file, &game->img_width,
+			&game->img_height);
 	return (*img != NULL);
 }
 
 void	safe_free(void **ptr)
 {
-	if (ptr && *ptr) 
+	if (ptr && *ptr)
 	{
-        free(*ptr);
-        *ptr = NULL;
+		free(*ptr);
+		*ptr = NULL;
 	}
 }
