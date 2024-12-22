@@ -58,6 +58,7 @@ void	clean_game(t_game *game)
 		game->win = NULL;
 	}
 	clean_map(game->map);
+	free(game);
 	game = NULL;
 }
 
