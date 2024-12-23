@@ -5,66 +5,108 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/06 21:10:24 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/11 10:49:36 by natferna         ###   ########.fr       */
+/*   Created: 2024/12/16 21:52:13 by natferna          #+#    #+#             */
+/*   Updated: 2024/12/23 18:26:02 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/so_long.h"
-#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-int	is_valid_move(t_game *game, int x, int y, int **visited)
+void	get_map_size(char **map, int *height, int *width)
 {
-	return (x >= 0 && x < game->width && y >= 0 && y < game->height
-		&& !visited[y][x] && game->map[y][x] != '1');
+	*height = 0;
+	*width = ft_strlen(map[0]);
+	while (map[*height])
+		(*height)++;
 }
 
-void	handle_collectible(t_game *game, int x, int y)
+int	is_valid_map(char **map)
 {
-	if (game->map[y][x] == 'C')
-		game->collected++;
+	if (!map || !map[0])
+		return (ft_printf("Error: is_valid_map - Map is empty or NULL.\n"), 0);
+	if (!valid_map_dimensions(map))
+		return (ft_printf("Error: is_valid_map - Invalid map dimensions.\n"),
+			0);
+	if (!valid_map_borders(map))
+		return (ft_printf("Error: is_valid_map - Invalid map frame.\n"), 0);
+	if (!valid_map_elements(map))
+		return (ft_printf("Error: is_valid_map - Missing \
+		required elements"), 0);
+	return (1);
 }
 
-void	find_exit_position(char **map, t_game *game, int *exit_x, int *exit_y)
+int	valid_map_elements(char **map)
 {
-	int	x;
-	int	y;
+	int	i;
+	int	j;
+	int	map_items[3];
+	int	tile_type;
 
-	y = 0;
-	while (y < game->height)
+	i = 0;
+	ft_memset(map_items, 0, sizeof(map_items));
+	while (map[i])
 	{
-		x = 0;
-		while (x < game->width)
+		j = 0;
+		while (map[i][j])
 		{
-			if (map[y][x] == 'E')
-			{
-				*exit_x = x;
-				*exit_y = y;
-				return ;
-			}
-			x++;
+			tile_type = valid_tile(map[i][j]);
+			if (tile_type == 0)
+				return (ft_printf("Error: valid_map_elements"), 0);
+			else if (tile_type < 4)
+				map_items[tile_type - 1]++;
+			j++;
 		}
-		y++;
+		i++;
 	}
+	return (map_items[0] == 1 && map_items[1] == 1 && map_items[2] >= 1);
 }
 
-void	mark_exit_as_wall(char **map, t_game *game)
+int	valid_map_dimensions(char **map)
 {
-	int	exit_x;
-	int	exit_y;
+	int	i;
+	int	width;
+	int	len;
 
-	exit_x = game->player_x;
-	exit_y = game->player_y;
-	find_exit_position(map, game, &exit_x, &exit_y);
-	map[exit_y][exit_x] = '1';
+	width = ft_strlen(map[0]);
+	i = 0;
+	while (map[i])
+	{
+		len = ft_strlen(map[i]);
+		if (len != width)
+			return (ft_printf("Error: valid_map_dimensions"), 0);
+		i++;
+	}
+	if (i == width)
+		return (ft_printf("Error: valid_map_dimensions - Square map.\n"), 0);
+	return (1);
 }
 
-int	exit_game_wrapper(void *param)
+int	valid_map_borders(char **map)
 {
-	t_game	*game;
+	int	height;
+	int	width;
+	int	i;
+	int	j;
 
-	game = (t_game *)param;
-	exit_game(game);
-	return (0);
+	get_map_size(map, &height, &width);
+	i = 0;
+	while (map[i])
+	{
+		if (i == 0 || i == height)
+		{
+			j = 0;
+			while (map[i][j])
+			{
+				if (map[i][j] != '1')
+					return (ft_printf("Error: valid_map_borders"), 0);
+				j++;
+			}
+		}
+		if (map[i][0] != '1' || map[i][width - 1] != '1')
+			return (ft_printf("Error: valid_map_borders"), 0);
+		i++;
+	}
+	return (1);
 }

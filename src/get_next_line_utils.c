@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 23:10:11 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/06 20:32:44 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/23 18:25:06 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,13 @@ size_t	ft_strlen(const char *s)
 	size_t	len;
 
 	len = 0;
-	while (s && s[len])
-		len++;
+	while (s[len])
+	{
+		if (s[len] != '\n')
+			len++;
+		else if (s[len] == '\n' && s[len + 1] == '\0')
+			break ;
+	}
 	return (len);
 }
 

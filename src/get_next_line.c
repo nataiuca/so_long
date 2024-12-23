@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 23:10:43 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/06 23:56:58 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/23 18:24:49 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char	*get_line(char **remainder)
 	return (line);
 }
 
-static int	read_and_store(int fd, char **remainder)
+int	read_and_store(int fd, char **remainder)
 {
 	char	*buf;
 	int		read_bytes;

@@ -5,52 +5,18 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/06 20:07:29 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/13 16:40:35 by natferna         ###   ########.fr       */
+/*   Created: 2024/12/18 19:55:48 by natferna          #+#    #+#             */
+/*   Updated: 2024/12/23 18:22:13 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/so_long.h"
 
-int	handle_exit(t_game *game, int x, int y)
+void	handle_events(t_game *game)
 {
-	if (game->map[y][x] == 'E' && game->collected == game->collectibles)
-	{
-		game->move_count++;
-		ft_printf("Congrats! You won the game in %d moves.\n",
-			game->move_count);
-		exit_game(game);
-		return (1);
-	}
-	return (0);
-}
-
-void	move_player(t_game *game, int dx, int dy)
-{
-	int	new_x;
-	int	new_y;
-	int	**visited;
-
-	init_visited_player(game, &visited);
-	new_x = game->player_x + dx;
-	new_y = game->player_y + dy;
-	if (!is_valid_move(game, new_x, new_y, visited))
-		return ;
-	free(visited);
-	handle_collectible(game, new_x, new_y);
-	if (handle_exit(game, new_x, new_y))
-		return ;
-	if (!is_exit_found(game, new_x, new_y))
-	{
-		game->map[game->player_y][game->player_x] = '0';
-		game->map[new_y][new_x] = 'P';
-		game->player_x = new_x;
-		game->player_y = new_y;
-		game->move_count++;
-		ft_printf("Moves: %d\n", game->move_count);
-		render_map(game);
-	}
-	return ;
+	mlx_key_hook(game->win, handle_key, game);
+	mlx_hook(game->win, 17, 0, exit_event, game);
+	mlx_loop(game->mlx);
 }
 
 int	handle_key(int keycode, t_game *game)
@@ -68,27 +34,29 @@ int	handle_key(int keycode, t_game *game)
 	return (0);
 }
 
-void	process_tile(t_game *game, int x, int y)
+void	handle_collectible(t_game *game, int x, int y)
 {
-	if (game->map[y][x] == 'P')
-	{
-		game->player_x = x;
-		game->player_y = y;
-	}
-	else if (game->map[y][x] == 'C')
-		game->collectibles++;
-	else if (game->map[y][x] == 'E')
-	{
-		check_exit_collision(game, x, y);
-	}
+	if (game->map[y][x] == 'C')
+		game->collected++;
 }
 
-void	check_exit_collision(t_game *game, int x, int y)
+int	handle_exit(t_game *game, int x, int y)
 {
-	if (game->player_x == x && game->player_y == y)
+	if (game->map[y][x] == 'E' && game->collected == game->collectibles)
 	{
-		ft_printf("Error: Exit is in the same position \
-			as the player.\n");
-		exit(1);
+		game->move_count++;
+		ft_printf("Congrats! You won the game in %d moves.\n",
+			game->move_count);
+		close_game(game, "Win!");
+		return (1);
 	}
+	return (0);
+}
+
+int	exit_event(void *param)
+{
+	t_game	*game;
+
+	game = (t_game *)param;
+	return (close_game(game, "--- Exit event triggered ---"), 0);
 }
