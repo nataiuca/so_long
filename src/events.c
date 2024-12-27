@@ -40,22 +40,22 @@ void	handle_collectible(t_game *game, int x, int y)
 		game->collected++;
 }
 
-int handle_exit(t_game *game, int x, int y)
+int	handle_exit(t_game *game, int x, int y)
 {
-    if (game->map[y][x] == 'E')
-    {
-        if (game->collected == game->collectibles)
-        {
-            game->exit_found = 1;
-            return 1;
-        }
-        else
-        {
-            ft_printf("You need to collect all items before exiting!\n");
-            return 0;
-        }
-    }
-    return 0;
+	if (game->map[y][x] == 'E' && game->collected == game->collectibles)
+	{
+		if (game->move_count < 1)
+		{
+			game->exit_found = 1;
+			return (1);
+		}
+		game->move_count++;
+		ft_printf("Congrats! You won the game in %d moves.\n",
+			game->move_count);
+		close_game(game, "Win!");
+		return (1);
+	}
+	return (0);
 }
 
 
