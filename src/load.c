@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 21:35:53 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/23 22:34:50 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/28 00:22:47 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	load_map(char *map_file, t_game *game)
 	free(map_content);
 	if (!game->map || !game->map[0])
 	{
-		clean_map(game->map);
 		return (ft_printf("Error: Load_map - Empty map.\n"), 0);
 	}
 	get_map_size(game->map, &game->height, &game->width);

@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/16 21:04:43 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/23 22:34:52 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/28 00:21:25 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ void	clean_game(t_game *game)
 	}
 	if (game->map)
 		clean_map(game->map);
-	free(game);
+		game->map = NULL;
+	free(game);	
 	game = NULL;
 }
 
@@ -86,5 +87,4 @@ void	clean_map(char **map)
 		i++;
 	}
 	free(map);
-	map = NULL;
 }

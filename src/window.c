@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 19:56:25 by natferna          #+#    #+#             */
-/*   Updated: 2024/12/23 22:34:54 by natferna         ###   ########.fr       */
+/*   Updated: 2024/12/28 00:14:22 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,5 @@ void	close_game(t_game *game, char *message)
 	ft_printf("%s\n", message);
 	if (game)
 		clean_game(game);
-	game = NULL;
 	exit(0);
 }
