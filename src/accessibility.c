@@ -40,11 +40,28 @@ int	is_accessible(t_game *game)
 	return (game->collected == game->collectibles && game->exit_found);
 }
 
+static void	initialize_visited(int **visited, int width, int height)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < height)
+	{
+		j = 0;
+		while (j < width)
+		{
+			visited[i][j] = 0;
+			j++;
+		}
+		i++;
+	}
+}
+
 int	**init_visited(int width, int height)
 {
 	int	**visited;
 	int	i;
-	int	j;
 
 	visited = (int **)malloc(sizeof(int *) * height);
 	if (!visited)
@@ -54,22 +71,15 @@ int	**init_visited(int width, int height)
 	{
 		visited[i] = (int *)malloc(sizeof(int) * width);
 		if (!visited[i])
-        {
-            while (i > 0)
-            {
-                free(visited[i--]);
-            }
-            free(visited);
-            return (NULL);
-        }
-		j = 0;
-		while (j < width)
 		{
-			visited[i][j] = 0;
-			j++;
+			while (i > 0)
+				free(visited[--i]);
+			free(visited);
+			return (NULL);
 		}
 		i++;
 	}
+	initialize_visited(visited, width, height);
 	return (visited);
 }
 
